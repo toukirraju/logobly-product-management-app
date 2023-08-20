@@ -5,14 +5,16 @@ const { jwtSecretKey } = require("../utils/secret");
 const isLoggedIn = async (req, res, next) => {
   try {
     const token = req.cookies.accessToken;
+
     if (!token) {
       throw createHttpError(401, "Access token not found. Please login");
     }
     const decoded = jwt.verify(token, jwtSecretKey);
+
     if (!decoded) {
       throw createHttpError(401, "Invalid access token. Please login again");
     }
-    req.user = decoded.user;
+    req.user = decoded.userWithoutPassword;
     next();
   } catch (error) {
     next(error);

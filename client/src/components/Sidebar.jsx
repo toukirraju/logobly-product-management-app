@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Logo, addIcon } from "../assets";
 import { NavLink } from "react-router-dom";
+import { useLogoutMutation } from "../redux/features/auth/authApi";
 
 const Sidebar = () => {
   const [toggle, setToggle] = useState(false);
+  const [logout] = useLogoutMutation();
   return (
     <aside
       className={`fixed border-r-2 top-0 left-0 z-40 w-64 h-screen transition-transform ${
@@ -231,9 +233,9 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
+            <span
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 hover:text-blue-500 dark:hover:bg-gray-700 group"
+              onClick={() => logout()}
             >
               <svg
                 className="w-5 h-5 stroke-gray-800 text-white dark:text-gray-400 group-hover:text-white  transition duration-75   group-hover:stroke-blue-500"
@@ -264,7 +266,7 @@ const Sidebar = () => {
                 />
               </svg>
               <span className="flex-1 ml-3 whitespace-nowrap">Logout</span>
-            </a>
+            </span>
           </li>
         </ul>
       </div>

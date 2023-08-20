@@ -6,34 +6,27 @@ import InputField from "../../../components/InputField";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearError } from "../../../redux/features/errorSlice";
-import { useCreateProductMutation } from "../../../redux/features/products/productApi";
+import {
+  useCreateProductMutation,
+  useUpdateProductMutation,
+} from "../../../redux/features/products/productApi";
 import readFileAsBase64 from "../../../../../app/utils/readFileAsBase64";
 
-const AddProduct = ({ isModalOpen, setIsModalOpen }) => {
+const UpdateProduct = ({
+  isModalOpen,
+  setIsModalOpen,
+  selectedProduct = {},
+}) => {
   const dispatch = useDispatch();
   const [initialValues, setInitialValues] = useState({
-    name: "",
-    description: "",
-    purchasePrice: 0,
-    sellingPrice: 0,
-    quantity: 0,
-    addedDate: "",
-    image: null,
+    ...selectedProduct,
   });
 
-  const resetForm = () => {
-    setInitialValues({
-      name: "",
-      description: "",
-      purchasePrice: 0,
-      sellingPrice: 0,
-      quantity: 0,
-      addedDate: "",
-      image: null,
-    });
-  };
+  const [updateProduct, { isSuccess }] = useUpdateProductMutation();
 
-  const [createProduct, { isSuccess, isError }] = useCreateProductMutation();
+  useEffect(() => {
+    setInitialValues({ ...selectedProduct });
+  }, [isModalOpen, selectedProduct]);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -48,21 +41,13 @@ const AddProduct = ({ isModalOpen, setIsModalOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(clearError());
-
-    if (initialValues.image) {
-      try {
-        const base64Data = await readFileAsBase64(initialValues.image);
-        createProduct({ ...initialValues, image: base64Data });
-      } catch (error) {
-        console.error("Error reading file:", error);
-      }
-    }
+    const { image, ...others } = initialValues || {};
+    updateProduct(others);
   };
 
   useEffect(() => {
     if (isSuccess) {
       setIsModalOpen(false);
-      resetForm();
     }
   }, [isSuccess]);
 
@@ -98,55 +83,6 @@ const AddProduct = ({ isModalOpen, setIsModalOpen }) => {
           required
           placeholder="Tell us about your home here"
         />
-
-        <div>
-          <div className="flex flex-col gap-1 mb-3">
-            <span className="font-semibold">Add Media</span>
-            <span className="text-[12px] text-gray-500">
-              Add up to 50 images to your product image, videos.
-            </span>
-          </div>
-          <div className="my-1">
-            <Dropzone
-              onDrop={(files) =>
-                setInitialValues({ ...initialValues, image: files[0] })
-              }
-              accept={["image/png", "image/jpeg", "image/jpg"]}
-              classNames={{
-                root: "bg-indigo-500 bg-opacity-10 border border-indigo-500",
-              }}
-            >
-              {initialValues.image ? (
-                <>
-                  <img
-                    src={URL.createObjectURL(initialValues.image)}
-                    alt={initialValues.image.name}
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "200px",
-                      marginRight: "10px",
-                    }}
-                  />
-                </>
-              ) : (
-                <div className="flex flex-col justify-between items-center p-4">
-                  <img
-                    className="bg-indigo-500  p-2 rounded-full bg-opacity-20"
-                    src={folderAddIcon}
-                    alt=""
-                  />
-                  <span>
-                    Drag and drop files, or{" "}
-                    <strong className="text-indigo-500">Browse</strong>
-                  </span>
-                  <span className="text-[12px] text-gray-500">
-                    Support image and videos
-                  </span>
-                </div>
-              )}
-            </Dropzone>
-          </div>
-        </div>
 
         <div>
           <label className="font-semibold">Product Added Date</label>
@@ -203,4 +139,4 @@ const AddProduct = ({ isModalOpen, setIsModalOpen }) => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;

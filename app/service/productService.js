@@ -47,17 +47,17 @@ const getAllProduct = async (page = 1, limit = 4) => {
   return { products, count };
 };
 
-const updateProductBySlug = async (slug, updates, image, updateOptions) => {
+const updateProductBySlug = async (slug, updates, updateOptions) => {
   if (updates.name) {
     updates.slug = slugify(updates.name);
   }
 
-  if (image) {
-    if (image.size > 1024 * 1024 * 2) {
-      throw new Error("File too large. It must be less then 2mb");
-    }
-    updates.image = image.buffer.toString("base64");
-  }
+  // if (image) {
+  //   if (image.size > 1024 * 1024 * 2) {
+  //     throw new Error("File too large. It must be less then 2mb");
+  //   }
+  //   updates.image = image.buffer.toString("base64");
+  // }
 
   const updatedProduct = await Product.findOneAndUpdate(
     { slug },

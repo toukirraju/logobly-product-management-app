@@ -16,17 +16,17 @@ const createProduct = async (req, res, next) => {
       sellingPrice,
       quantity,
       addedDate,
+      image,
     } = req.body;
 
-    const image = req.file;
     if (!image) {
       throw createHttpError(400, "Image file is required");
     }
-    if (image.size > 1024 * 1024 * 2) {
-      throw createHttpError(400, "File too large. It must be less than 2 MB");
-    }
+    // if (image.size > 1024 * 1024 * 2) {
+    //   throw createHttpError(400, "File too large. It must be less than 2 MB");
+    // }
 
-    const imageBufferString = image.buffer.toString("base64");
+    const imageBufferString = image;
 
     const productData = {
       name,
@@ -100,7 +100,6 @@ const updateProduct = async (req, res, next) => {
     const updatedProduct = await updateProductBySlug(
       slug,
       updates,
-      image,
       updateOptions
     );
 

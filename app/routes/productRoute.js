@@ -27,13 +27,7 @@ productRoute.post(
 productRoute.get("/", getProducts);
 
 // PATCAH -> /api/products/:slug -> update single product
-productRoute.patch(
-  "/:slug",
-  upload.single("image"),
-  isLoggedIn,
-  isAdmin,
-  updateProduct
-);
+productRoute.patch("/:slug", isLoggedIn, isAdmin, updateProduct);
 
 // DELETE -> /api/products/:slug -> delete single product
 productRoute.delete("/:slug", isLoggedIn, isAdmin, deleteProduct);

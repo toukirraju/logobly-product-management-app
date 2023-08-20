@@ -74,7 +74,10 @@ const userLogin = async (req, res, next) => {
     return successResponse(res, {
       statusCode: 200,
       message: "successfully login",
-      payload: userWithoutPassword,
+      payload: {
+        user: userWithoutPassword,
+        accessToken: accessToken,
+      },
     });
   } catch (error) {
     next(error);

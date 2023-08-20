@@ -7,11 +7,12 @@ const { errorResponse } = require("./utils/responseHandler");
 const userRoute = require("./routes/userRoute");
 const authRoute = require("./routes/authRoute");
 const productRoute = require("./routes/productRoute");
+const corsOptions = require("./config/corsOptions");
 
 const app = express();
 
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
