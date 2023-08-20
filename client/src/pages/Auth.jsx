@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Logo, loginRightImg, starsIcon, whiteLogo } from "../assets";
 import AuthForm from "../components/AuthForm";
-import Cookies from "js-cookie";
+
 const Auth = () => {
   const [isSignIn, setIsSignIn] = useState(true);
 

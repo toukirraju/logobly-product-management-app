@@ -5,7 +5,6 @@ import BalanceReport from "./components/BalanceReport";
 import WeeklyOverviewChart from "./components/WeeklyOverviewChart";
 import RecentOrders from "./components/RecentOrders";
 import TopSellingList from "./components/TopSellingList";
-
 const Dashboard = () => {
   return (
     <>
