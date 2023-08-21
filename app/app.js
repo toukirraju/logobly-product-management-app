@@ -8,6 +8,7 @@ const userRoute = require("./routes/userRoute");
 const authRoute = require("./routes/authRoute");
 const productRoute = require("./routes/productRoute");
 const corsOptions = require("./config/corsOptions");
+const passport = require("passport");
 
 const app = express();
 

@@ -1,15 +1,19 @@
 const createHttpError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const { jwtSecretKey } = require("../utils/secret");
+const parseValue = require("../utils/parseValue");
 
 const isLoggedIn = async (req, res, next) => {
   try {
-    const token = req.cookies.accessToken;
+    // const token = req.cookies.accessToken;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-      throw createHttpError(401, "Access token not found. Please login");
+    const parsedValue = parseValue(authHeader);
+    const decoded = jwt.verify(parsedValue, jwtSecretKey);
+
+    if (!authHeader) {
+      throw createHttpError(401, "Access authHeader not found. Please login");
     }
-    const decoded = jwt.verify(token, jwtSecretKey);
 
     if (!decoded) {
       throw createHttpError(401, "Invalid access token. Please login again");
@@ -23,8 +27,9 @@ const isLoggedIn = async (req, res, next) => {
 
 const isLoggedOut = async (req, res, next) => {
   try {
-    const token = req.cookies.accessToken;
-    if (token) {
+    // const token = req.cookies.accessToken;
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
       throw createHttpError(400, "User is already logged in");
     }
     next();

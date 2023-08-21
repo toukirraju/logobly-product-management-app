@@ -3,15 +3,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setError } from "../features/errorSlice";
 import { userLoggedOut } from "../features/auth/authSlice";
 
-const url = "http://localhost:8000/api";
-// const url = "https://product-managment-klro.onrender.com/api";
+// const url = "http://localhost:8080/api";
+const url = "https://product-managment-klro.onrender.com/api";
 const baseQuery = fetchBaseQuery({
   baseUrl: url,
-  credentials: "include",
+  // credentials: "include",
   prepareHeaders: async (headers, { getState, endpoint }) => {
     const token = getState()?.auth?.accessToken;
     if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+      headers.set("Authorization", token);
     }
     return headers;
   },

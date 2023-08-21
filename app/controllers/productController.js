@@ -52,6 +52,7 @@ const createProduct = async (req, res, next) => {
 
 const getProducts = async (req, res, next) => {
   try {
+    // console.log(req.headers);
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 4;
 

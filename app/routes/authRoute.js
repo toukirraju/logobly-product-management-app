@@ -29,6 +29,6 @@ authRoute.post(
   userLogin
 );
 
-authRoute.post("/logout", isLoggedIn, userLogout);
+authRoute.post("/logout", userLogout);
 
 module.exports = authRoute;

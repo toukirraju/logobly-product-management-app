@@ -64,12 +64,12 @@ const userLogin = async (req, res, next) => {
       "30m"
     );
 
-    res.cookie("accessToken", accessToken, {
-      maxAge: 30 * 60 * 1000,
-      httpOnly: true,
-      secure: true,
-      // sameSite: "none",
-    });
+    // res.cookie("accessToken", accessToken, {
+    //   maxAge: 30 * 60 * 1000,
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: "none",
+    // });
 
     return successResponse(res, {
       statusCode: 200,
