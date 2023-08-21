@@ -3,11 +3,13 @@ import { lockIcon, mailIcon } from "../assets";
 import InputField from "./InputField";
 import ServerError from "./ServerError";
 import useAuth from "../hooks/useAuth";
+import { Loader } from "@mantine/core";
 
 const AuthForm = ({ isSignIn }) => {
-  const { initialValues, handleChange, handleSubmit, error } = useAuth({
-    isSignIn,
-  });
+  const { initialValues, handleChange, handleSubmit, isLoading, error } =
+    useAuth({
+      isSignIn,
+    });
 
   return (
     <>
@@ -119,9 +121,19 @@ const AuthForm = ({ isSignIn }) => {
         <button
           className="bg-blue-600 w-full rounded my-3 py-1.5 text-white disabled:cursor-not-allowed disabled:bg-blue-300"
           type="submit"
-          disabled={!initialValues.terms && !isSignIn}
+          disabled={isLoading || (!initialValues.terms && !isSignIn)}
         >
-          {isSignIn ? "Sign In" : "Sign up"}
+          {isSignIn ? (
+            <div className="flex justify-center items-center gap-2">
+              <span>Sign In</span>
+              {isLoading && <Loader color="indigo" size="sm" />}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center gap-2">
+              <span>Sign up</span>
+              {isLoading && <Loader color="indigo" size="sm" />}
+            </div>
+          )}
         </button>
       </form>
     </>

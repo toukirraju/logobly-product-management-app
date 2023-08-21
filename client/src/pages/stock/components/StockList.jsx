@@ -1,5 +1,6 @@
 import { DataTable } from "mantine-datatable";
 import { useEffect, useState } from "react";
+import moment from "moment";
 import { edit2Icon, trashIcon } from "../../../assets";
 import {
   useDeleteProductMutation,
@@ -269,8 +270,7 @@ const StockList = () => {
           {
             accessor: "createdAt",
             title: "Product Added",
-            sortable: true,
-            // width: 200,
+            render: ({ createdAt }) => <>{moment(createdAt).calendar()}</>,
           },
 
           {
@@ -291,13 +291,11 @@ const StockList = () => {
             accessor: "purchasePrice",
             title: "Purchase",
             // width: 200,
-            sortable: true,
           },
           {
             accessor: "sellingPrice",
             title: "Selling",
             // width: 200,
-            sortable: true,
           },
           {
             accessor: "_id",

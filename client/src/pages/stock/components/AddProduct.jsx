@@ -1,70 +1,20 @@
 /* eslint-disable react/prop-types */
-import { Modal } from "@mantine/core";
+import { Loader, Modal } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { folderAddIcon } from "../../../assets";
 import InputField from "../../../components/InputField";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { clearError } from "../../../redux/features/errorSlice";
-import { useCreateProductMutation } from "../../../redux/features/products/productApi";
-import readFileAsBase64 from "../../../../../app/utils/readFileAsBase64";
+import useAddProduct from "../hooks/useAddProduct";
+import ServerError from "../../../components/ServerError";
 
 const AddProduct = ({ isModalOpen, setIsModalOpen }) => {
-  const dispatch = useDispatch();
-  const [initialValues, setInitialValues] = useState({
-    name: "",
-    description: "",
-    purchasePrice: 0,
-    sellingPrice: 0,
-    quantity: 0,
-    addedDate: "",
-    image: null,
-  });
-
-  const resetForm = () => {
-    setInitialValues({
-      name: "",
-      description: "",
-      purchasePrice: 0,
-      sellingPrice: 0,
-      quantity: 0,
-      addedDate: "",
-      image: null,
-    });
-  };
-
-  const [createProduct, { isSuccess, isError }] = useCreateProductMutation();
-
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setInitialValues({
-      ...initialValues,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(clearError());
-
-    if (initialValues.image) {
-      try {
-        const base64Data = await readFileAsBase64(initialValues.image);
-        createProduct({ ...initialValues, image: base64Data });
-      } catch (error) {
-        console.error("Error reading file:", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setIsModalOpen(false);
-      resetForm();
-    }
-  }, [isSuccess]);
+  const {
+    initialValues,
+    handleSubmit,
+    handleChange,
+    setInitialValues,
+    isLoading,
+    error,
+  } = useAddProduct({ setIsModalOpen });
 
   return (
     <Modal
@@ -78,6 +28,7 @@ const AddProduct = ({ isModalOpen, setIsModalOpen }) => {
       onClose={() => setIsModalOpen(false)}
       title="Add Product"
     >
+      {error && <ServerError message={error?.data?.message} />}
       <form className="px-4" onSubmit={handleSubmit}>
         <InputField
           label="Product Title"
@@ -193,10 +144,19 @@ const AddProduct = ({ isModalOpen, setIsModalOpen }) => {
           placeholder="Enter your selling price"
         />
         <div className="w-full flex justify-between py-4 gap-2">
-          <button className="w-full py-2 bg-gray-100 hover:bg-gray-200 rounded-md">
+          <span
+            onClick={() => setIsModalOpen(false)}
+            className="w-full py-2 text-center cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-md"
+          >
             Cancel
+          </span>
+          <button
+            disabled={isLoading}
+            className="btn_primary flex justify-center gap-2 items-center w-full py-2"
+          >
+            <span>Save</span>
+            {isLoading && <Loader size="sm" />}
           </button>
-          <button className="btn_primary w-full py-2">Save</button>
         </div>
       </form>
     </Modal>

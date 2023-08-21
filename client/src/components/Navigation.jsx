@@ -4,11 +4,11 @@ import { profileImg } from "../assets";
 const Navigation = () => {
   const { user } = useSelector((state) => state.auth);
   return (
-    <div className="flex h-[60px] items-center justify-between py-3 px-3 border-black border-b-2 bg-gray-50 w-full">
+    <div className="flex h-[60px] items-center justify-between py-3 px-3 lgpr-6 border-black border-b-2 bg-gray-50 w-full">
       <h3 className="text-[18px] font-semibold md:text-[30px] text-gray-700">
         {user.isAdmin ? "Admin Dashboard" : "User Dashboard"}
       </h3>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 bg-gray-200 p-1 lg:p-2 rounded-md">
         <div>
           <img src={profileImg} alt="" />
         </div>

@@ -1,55 +1,15 @@
 /* eslint-disable react/prop-types */
-import { Modal } from "@mantine/core";
-import { Dropzone } from "@mantine/dropzone";
-import { folderAddIcon } from "../../../assets";
+import { Loader, Modal } from "@mantine/core";
 import InputField from "../../../components/InputField";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { clearError } from "../../../redux/features/errorSlice";
-import {
-  useCreateProductMutation,
-  useUpdateProductMutation,
-} from "../../../redux/features/products/productApi";
-import readFileAsBase64 from "../../../../../app/utils/readFileAsBase64";
-
+import ServerError from "../../../components/ServerError";
+import useUpdateProduct from "../hooks/useUpdateProduct";
 const UpdateProduct = ({
   isModalOpen,
   setIsModalOpen,
   selectedProduct = {},
 }) => {
-  const dispatch = useDispatch();
-  const [initialValues, setInitialValues] = useState({
-    ...selectedProduct,
-  });
-
-  const [updateProduct, { isSuccess }] = useUpdateProductMutation();
-
-  useEffect(() => {
-    setInitialValues({ ...selectedProduct });
-  }, [isModalOpen, selectedProduct]);
-
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setInitialValues({
-      ...initialValues,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(clearError());
-    const { image, ...others } = initialValues || {};
-    updateProduct(others);
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setIsModalOpen(false);
-    }
-  }, [isSuccess]);
+  const { handleSubmit, handleChange, initialValues, error, isLoading } =
+    useUpdateProduct({ selectedProduct, isModalOpen, setIsModalOpen });
 
   return (
     <Modal
@@ -63,6 +23,7 @@ const UpdateProduct = ({
       onClose={() => setIsModalOpen(false)}
       title="Add Product"
     >
+      {error && <ServerError message={error?.data?.message} />}
       <form className="px-4" onSubmit={handleSubmit}>
         <InputField
           label="Product Title"
@@ -129,10 +90,16 @@ const UpdateProduct = ({
           placeholder="Enter your selling price"
         />
         <div className="w-full flex justify-between py-4 gap-2">
-          <button className="w-full py-2 bg-gray-100 hover:bg-gray-200 rounded-md">
+          <span
+            onClick={() => setIsModalOpen(false)}
+            className="w-full text-center cursor-pointer py-2 bg-gray-100 hover:bg-gray-200 rounded-md"
+          >
             Cancel
+          </span>
+          <button className="btn_primary w-full py-2 flex justify-center gap-2 items-center">
+            <span>Save</span>
+            {isLoading && <Loader size="sm" />}
           </button>
-          <button className="btn_primary w-full py-2">Save</button>
         </div>
       </form>
     </Modal>

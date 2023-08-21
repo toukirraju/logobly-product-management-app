@@ -7,6 +7,7 @@ import useAuthCheck from "./hooks/useAuthCheck";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import useCheckLogin from "./hooks/useCheckLogin";
+import TokenExpirationChecker from "./components/TokenExpirationChecker";
 
 function App() {
   const authChecked = useAuthCheck();

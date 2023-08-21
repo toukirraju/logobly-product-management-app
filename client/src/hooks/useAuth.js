@@ -25,13 +25,24 @@ const useAuth = ({ isSignIn }) => {
   };
   const dispatch = useDispatch();
   const error = useSelector((state) => state.serverError);
-  const [login, { isSuccess: signinSuccess, isError: signinError }] =
-    useLoginMutation();
+  const [
+    login,
+    {
+      isSuccess: signinSuccess,
+      isError: signinError,
+      isLoading: signinLoading,
+    },
+  ] = useLoginMutation();
   const [
     registration,
-    { isSuccess: registrationSucces, isError: registrationError },
+    {
+      isSuccess: registrationSucces,
+      isError: registrationError,
+      isLoading: regiserLoading,
+    },
   ] = useRegistrationMutation();
 
+  const isLoading = signinLoading || regiserLoading;
   const isSuccess = signinSuccess || registrationSucces;
   const isError = signinError || registrationError;
 
@@ -75,6 +86,7 @@ const useAuth = ({ isSignIn }) => {
   return {
     initialValues,
     handleChange,
+    isLoading,
     error,
     handleSubmit,
   };
